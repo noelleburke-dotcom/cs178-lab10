@@ -21,6 +21,22 @@ def create_movie():
         }
     )
 
+def update_rating():
+    try:
+        title = input("What is the movie title? ")
+        rating = int(input("What is the rating (integer): "))
+        if not isinstance(title,str) and not isinstance(rating, int):
+            raise ValueError("wrong entry types")
+    
+        table.update_item(
+            Key={"Title": title},
+            UpdateExpression="SET Ratings = list_append(Ratings, :r)",
+            ExpressionAttributeValues={':r': [rating]}
+        )
+        print("rating was updated")
+    except ValueError as e:
+        print("error in updating the rating")    
+    
 def print_all_movies():
     """Scan the entire Movies table and print each item."""
     table = get_table()
