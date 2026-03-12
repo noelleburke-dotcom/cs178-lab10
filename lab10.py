@@ -9,7 +9,7 @@ import boto3
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Playlist')
 
-def create_movie():
+def create_song():
     title= (input("Please enter a song title"))
     artist= (input("Who sang the song?"))
     table.put_item(
@@ -22,7 +22,7 @@ def create_movie():
  
  
  
-def print_all_movies():
+def print_all_songs():
     """Scan the entire Movies table and print each item."""
     table = dynamodb.Table('Playlist')
     response = table.scan()
@@ -37,7 +37,7 @@ def print_all_movies():
 
 
 
-def delete_movie():
+def delete_song():
     title = input("What is the song title? ")
     table.delete_item(
         Key={
@@ -61,11 +61,11 @@ def main():
         print_menu()
         input_char = input("Choice: ")
         if input_char.upper() == "C":
-            create_movie()
+            create_song()
         elif input_char.upper() == "R":
-            print_all_movies()
+            print_all_songs()
         elif input_char.upper() == "D":
-            delete_movie()
+            delete_song()
         elif input_char.upper() == "X":
             print("exiting...")
         else:
