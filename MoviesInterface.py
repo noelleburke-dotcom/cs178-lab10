@@ -10,9 +10,6 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Movies')
 
 def create_movie():
-    print("Please enter a movie title")
-    print("What year did the movie release?")
-    print("What are the ratings of the movie?")
     title= (input("Please enter a movie title"))
     year= int(input("What year did the movie release?"))
     rating= int(input("What are the ratings of the movie?"))
@@ -36,30 +33,24 @@ def print_all_movies():
     if not items:
         print("No movies found. Make sure your DynamoDB table has data.")
         return
-    for movie in table:
+    for movie in items:
         print(movie)
 
 def update_rating():
-    print("What is the movie title? What is the rating (integer):")
-    try:
-        title = input("What is the movie title? ")
-        rating = int(input("What is the rating (integer): "))
-        if not isinstance(title,str) or not isinstance(rating, int):
-            raise ValueError("wrong entry types")
+    title = input("What is the movie title? ")
+    rating = int(input("What is the rating (integer): "))
+
     
-        table.update_item(
-            Key={"Title": title},
-            UpdateExpression="SET Ratings = list_append(Ratings, :r)",
-            ExpressionAttributeValues={':r': [rating]}
+    table.update_item(
+        Key={"Title": title},
+        UpdateExpression="SET Ratings = list_append(Ratings, :r)",
+        ExpressionAttributeValues={':r': [rating]}
         )
-        print("updating rating")
-    except ValueError :
-        print("error in updating the rating")   
-    
+    print("updating rating")
+
 
 def delete_movie():
-    print("What is the movie title?")
-    title =input("What is the movie title? ")
+    title = input("What is the movie title? ")
     table.delete_item(
         Key={
             'Title':title,
@@ -68,7 +59,7 @@ def delete_movie():
     print("deleting movie")
 
 def query_movie():
-    title =input("What is the movie title? ")
+    title = input("What is the movie title? ")
     response=table.get_item(
          Key={
              'Title':title,
@@ -87,8 +78,6 @@ def query_movie():
         print("No ratings were entered")
 
          
-
-
 
 def print_menu():
     print("----------------------------")
