@@ -4,8 +4,7 @@
 # proposed score: 0 (out of 5) -- if I don't change this, I agree to get 0 points.
 
 import boto3
-REGION = "us-east-1"
-TABLE_NAME = "Movies"
+
 # boto3 uses the credentials configured via `aws configure` on EC2
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Movies')
@@ -26,14 +25,11 @@ def create_movie():
     )
     print("Bam movie created!")
  
-def get_table():
-    """Return a reference to the DynamoDB Movies table."""
-    dynamodb = boto3.resource("dynamodb", region_name=REGION)
-    return dynamodb.Table(TABLE_NAME)   
+ 
  
 def print_all_movies():
     """Scan the entire Movies table and print each item."""
-    table = get_table()
+    table = dynamodb.Table('Movies')
     response = table.scan()
     items = response.get("Items", [])
     
