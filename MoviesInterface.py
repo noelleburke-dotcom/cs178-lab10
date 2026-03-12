@@ -40,12 +40,13 @@ def print_all_movies():
     if not items:
         print("No movies found. Make sure your DynamoDB table has data.")
         return
-
+    for movie in table:
+        print(movie)
 
 def update_rating():
     print("What is the movie title? What is the rating (integer):")
     try:
-        title = (input("What is the movie title? "))
+        title = input("What is the movie title? ")
         rating = int(input("What is the rating (integer): "))
         if not isinstance(title,str) or not isinstance(rating, int):
             raise ValueError("wrong entry types")
@@ -62,7 +63,7 @@ def update_rating():
 
 def delete_movie():
     print("What is the movie title?")
-    title = print(input("What is the movie title? "))
+    title =input("What is the movie title? ")
     table.delete_item(
         Key={
             'Title':title,
@@ -71,13 +72,12 @@ def delete_movie():
     print("deleting movie")
 
 def query_movie():
-    title = print(input("What is the movie title? "))
-    title=table.get_item(
+    title =input("What is the movie title? ")
+    response=table.get_item(
          Key={
              'Title':title,
          }
      )
-     
     movie= response.get("Item")
 
     if not movie:
