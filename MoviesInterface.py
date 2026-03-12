@@ -11,9 +11,12 @@ dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Movies')
 
 def create_movie():
+    print("Please enter a movie title")
+    print("What year did the movie release?")
+    print("What are the ratings of the movie?")
     title= (input("Please enter a movie title"))
-    year= int(input('What year did the movie release?'))
-    rating= int(input('What are the ratings of the movie?'))
+    year= int(input("What year did the movie release?"))
+    rating= int(input("What are the ratings of the movie?"))
     table.put_item(
         Item={
             'Title': title,
@@ -40,6 +43,7 @@ def print_all_movies():
 
 
 def update_rating():
+    print("What is the movie title? What is the rating (integer):")
     try:
         title = (input("What is the movie title? "))
         rating = int(input("What is the rating (integer): "))
@@ -57,6 +61,7 @@ def update_rating():
     
 
 def delete_movie():
+    print("What is the movie title?")
     title = print(input("What is the movie title? "))
     table.delete_item(
         Key={
