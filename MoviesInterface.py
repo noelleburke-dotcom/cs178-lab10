@@ -1,7 +1,7 @@
 # name: Noelle Burke
 # date:3/10/26
 # description: Implementation of CRUD operations with DynamoDB — CS178 Lab 10
-# proposed score: 0 (out of 5) -- if I don't change this, I agree to get 0 points.
+# proposed score: 3 (out of 5) -- if I don't change this, I agree to get 0 points.
 
 import boto3
 
@@ -37,8 +37,8 @@ def print_all_movies():
         print(movie)
 
 def update_rating():
-    title = input("What is the movie title? ")
-    rating = int(input("What is the rating (integer): "))
+    title = input("What is the movie title?")
+    rating = int(input("What is the rating (integer please): "))
 
     
     table.update_item(
