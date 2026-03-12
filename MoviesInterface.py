@@ -4,32 +4,33 @@
 # proposed score: 0 (out of 5) -- if I don't change this, I agree to get 0 points.
 
 import boto3
-
+REGION = "us-east-1"
+TABLE_NAME = "Movies"
 # boto3 uses the credentials configured via `aws configure` on EC2
 dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 table = dynamodb.Table('Movies')
 
 def create_movie():
-    title= str(input("Please enter a movie title"))
+    title= (input("Please enter a movie title"))
     year= int(input('What year did the movie release?'))
-    ratings= int(input('What are the ratings of the movie?'))
+    rating= int(input('What are the ratings of the movie?'))
     table.put_item(
         Item={
             'Title': title,
             'Year': year,
-            'Ratings':[]
+            'Ratings':[rating]
         }
     )
-
+    print("Bam movie created!")
  
-    
+def get_table():
+    """Return a reference to the DynamoDB Movies table."""
+    dynamodb = boto3.resource("dynamodb", region_name=REGION)
+    return dynamodb.Table(TABLE_NAME)   
+ 
 def print_all_movies():
     """Scan the entire Movies table and print each item."""
     table = get_table()
-    
-    # scan() retrieves ALL items in the table.
-    # For large tables you'd use query() instead — but for our small
-    # dataset, scan() is fine.
     response = table.scan()
     items = response.get("Items", [])
     
@@ -40,9 +41,9 @@ def print_all_movies():
 
 def update_rating():
     try:
-        title = input("What is the movie title? ")
+        title = (input("What is the movie title? "))
         rating = int(input("What is the rating (integer): "))
-        if not isinstance(title,str) and not isinstance(rating, int):
+        if not isinstance(title,str) or not isinstance(rating, int):
             raise ValueError("wrong entry types")
     
         table.update_item(
@@ -50,24 +51,43 @@ def update_rating():
             UpdateExpression="SET Ratings = list_append(Ratings, :r)",
             ExpressionAttributeValues={':r': [rating]}
         )
-        print("rating was updated")
-    except ValueError as e:
+        print("updating rating")
+    except ValueError :
         print("error in updating the rating")   
-    print("updating rating")
+    
 
 def delete_movie():
-    """
-    Prompt user for a Movie Title.
-    Delete that item from the database.
-    """
+    title = print(input("What is the movie title? "))
+    table.delete_item(
+        Key={
+            'Title':title,
+        }
+    )
     print("deleting movie")
 
 def query_movie():
-    """
-    Prompt user for a Movie Title.
-    Print out the average of all ratings in the movie's Ratings list.
-    """
-    print("query movie")
+    title = print(input("What is the movie title? "))
+    title=table.get_item(
+         Key={
+             'Title':title,
+         }
+     )
+     
+    movie= response.get("Item")
+
+    if not movie:
+        print("not found")
+        return
+    ratings=movie.get("Ratings",[])
+    if ratings: #get average of rating
+        average= sum(ratings)/len(ratings)
+        print("Average rating is ", average)
+    else:
+        print("No ratings were entered")
+
+         
+
+
 
 def print_menu():
     print("----------------------------")
